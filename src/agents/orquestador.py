@@ -12,9 +12,9 @@ load_dotenv()
 CRITERIOS_DELEGACION = {
     "pregunta_normativa":        ["worker_documentos"],
     "pregunta_beneficios":       ["worker_documentos"],
-    "perfil_estudiante":         ["worker_historial_sql", "worker_scoring"],
+    "perfil_estudiante":         ["worker_historial_sql", "worker_scoring", "worker_documentos"],
     "crear_intervencion":        ["worker_historial_sql", "worker_documentos"],
-    "reporteria_institucional":  ["worker_historial_sql"],
+    "reporteria_institucional":  ["worker_documentos", "worker_historial_sql"],
     "consulta_multidimensional": ["worker_documentos", "worker_historial_sql", "worker_scoring"],
 }
 
