@@ -1,0 +1,107 @@
+ESTADÍSTICAS DE DESERCIÓN HISTÓRICA — UCEN 2019-2023
+Unidad de Análisis Institucional · Informe Anual de Retención Estudiantil
+
+===========================================================
+1. RESUMEN EJECUTIVO
+===========================================================
+
+La Universidad Central de Chile ha monitoreado la deserción estudiantil de forma sistemática desde 2019. Los datos muestran una tendencia a la baja en la tasa de deserción global, pasando de un 18,3% en 2019 a un 13,7% en 2023, atribuible en parte a la implementación del sistema de intervención temprana.
+
+===========================================================
+2. TASAS DE DESERCIÓN POR AÑO
+===========================================================
+
+Año 2019: 18,3% (línea base antes del programa de intervención)
+Año 2020: 21,2% (aumento atípico por pandemia COVID-19)
+Año 2021: 16,8% (recuperación post-pandemia, inicio piloto de consejería IA)
+Año 2022: 15,1% (consolidación del programa de consejería)
+Año 2023: 13,7% (mejor resultado histórico)
+
+Nota: La deserción se define como estudiantes que no renuevan matrícula en el período siguiente y no han egresado ni solicitado suspensión formal.
+
+===========================================================
+3. DESERCIÓN POR CARRERA (2023)
+===========================================================
+
+Carreras con mayor riesgo de deserción:
+1. Pedagogía Básica: 19,2%
+2. Trabajo Social: 17,8%
+3. Diseño Gráfico: 16,5%
+4. Tecnología en Administración de Empresas: 15,9%
+5. Preparación Física: 15,3%
+
+Carreras con menor riesgo:
+1. Medicina: 3,1%
+2. Odontología: 4,8%
+3. Derecho: 6,2%
+4. Kinesiología: 7,4%
+5. Ingeniería Civil Informática: 8,9%
+
+===========================================================
+4. DESERCIÓN POR SEMESTRE
+===========================================================
+
+El primer semestre concentra el 42% de la deserción total.
+El segundo semestre concentra el 28%.
+Los semestres 3 al 6 suman el 22%.
+Semestres superiores (7+): 8%.
+
+Conclusión: La intervención en el primer año es crítica para la retención.
+
+===========================================================
+5. FACTORES ASOCIADOS A LA DESERCIÓN (análisis multivariado)
+===========================================================
+
+Factor                              | Correlación con deserción | Odds Ratio
+------------------------------------|--------------------------|------------
+Reprobación en primer semestre      | 0,72 (alta)              | 4,3x
+Asistencia < 65% en semana 4        | 0,68 (alta)              | 3,9x
+Deuda de arancel (≥ 2 cuotas)       | 0,61 (alta)              | 3,2x
+Primera generación universitaria    | 0,48 (moderada)          | 2,1x
+Sin uso de plataformas digitales     | 0,43 (moderada)          | 1,9x
+Carrera no es primera opción        | 0,39 (moderada)          | 1,7x
+Procedencia rural o de región       | 0,35 (moderada)          | 1,5x
+Edad de ingreso > 22 años           | 0,31 (baja-moderada)     | 1,4x
+
+===========================================================
+6. IMPACTO DEL PROGRAMA DE INTERVENCIÓN TEMPRANA
+===========================================================
+
+En 2021 se implementó el piloto de ConsultorEstudiantilIA en 3 carreras.
+En 2022 se extendió a todas las facultades.
+
+Resultados comparativos (estudiantes con intervención vs. sin intervención):
+
+Indicador                              | Sin intervención | Con intervención | Diferencia
+---------------------------------------|-----------------|-----------------|----------
+Tasa de deserción 1er semestre         | 9,8%            | 6,2%            | -3,6 pp
+Promedio final del semestre            | 4,71            | 5,03            | +0,32
+Asistencia promedio                    | 72,3%           | 79,1%           | +6,8 pp
+Estudiantes con beca activa            | 61,2%           | 74,8%           | +13,6 pp
+Satisfacción con la experiencia (1-7)  | 4,9             | 5,8             | +0,9 pts
+
+===========================================================
+7. PERFIL DEL ESTUDIANTE EN RIESGO — CARACTERIZACIÓN
+===========================================================
+
+A partir del análisis de 2.400 casos de riesgo alto (2019-2023):
+
+Sexo: 58% mujeres, 42% hombres.
+Edad promedio: 21,3 años.
+70% son primera generación universitaria.
+55% trabaja más de 15 horas semanales.
+48% tiene alguna deuda de arancel.
+62% proviene de liceos municipales o subvencionados.
+39% reporta dificultades de adaptación en los primeros 2 meses.
+28% ha experimentado situaciones de crisis emocional.
+
+===========================================================
+8. RECOMENDACIONES PARA 2024-2025
+===========================================================
+
+1. Reforzar el acompañamiento en las primeras 8 semanas del primer semestre.
+2. Ampliar las tutorías entre pares para asignaturas con mayor tasa de reprobación.
+3. Mejorar la detección de señales de crisis emocional en plataformas digitales.
+4. Crear un programa específico para estudiantes de primera generación.
+5. Aumentar la frecuencia de actualización del modelo predictivo (mensual vs. semestral).
+6. Establecer alianza con empleadores para reducir las horas de trabajo de estudiantes en riesgo.

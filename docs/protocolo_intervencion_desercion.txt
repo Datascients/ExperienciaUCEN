@@ -1,0 +1,120 @@
+PROTOCOLO DE INTERVENCIÓN TEMPRANA PARA PREVENCIÓN DE DESERCIÓN ESTUDIANTIL
+UCEN — Vicerrectoría Académica · Dirección de Desarrollo Estudiantil · Versión 2024
+
+===========================================================
+1. PROPÓSITO Y ALCANCE
+===========================================================
+
+El presente protocolo establece los lineamientos de actuación para la detección temprana de estudiantes en riesgo de deserción y la implementación de acciones de apoyo oportunas.
+
+Este protocolo aplica a todos los estudiantes de pregrado de la UCEN y es de cumplimiento obligatorio para consejeros académicos, directores de carrera y el equipo de Bienestar Estudiantil.
+
+===========================================================
+2. DEFINICIÓN DE RIESGO DE DESERCIÓN
+===========================================================
+
+Se clasifica a un estudiante como "en riesgo" si presenta al menos 2 de los siguientes indicadores:
+
+NIVEL ALTO DE RIESGO (acción inmediata — máx. 48 horas):
+- Asistencia < 50% en el semestre en curso
+- Reprobación de más del 60% de créditos inscritos
+- Deuda de arancel superior a 2 cuotas
+- Contacto nulo con consejero por más de 45 días
+- Señales de crisis emocional detectadas por docente o par
+- Solicitud de baja o suspensión de estudios
+
+NIVEL MEDIO DE RIESGO (intervención en los siguientes 5 días hábiles):
+- Asistencia entre 50% y 65%
+- PPA semestral entre 3,5 y 4,2
+- Deuda de 1 cuota de arancel
+- Historial de reproches acumulados (≥ 3 asignaturas)
+- Cambio abrupto de rendimiento respecto a semestres anteriores
+
+NIVEL BAJO DE RIESGO (seguimiento preventivo mensual):
+- Asistencia entre 65% y 75%
+- PPA entre 4,2 y 4,5
+- Primer semestre de carrera con señales de desadaptación
+
+===========================================================
+3. FLUJO DE INTERVENCIÓN
+===========================================================
+
+ETAPA 1 — DETECCIÓN (Semana 4 y 8 del semestre)
+  a) El sistema IA genera automáticamente el score de riesgo de cada estudiante.
+  b) El consejero revisa el listado de estudiantes en niveles medio y alto.
+  c) Los docentes pueden reportar señales de alerta a través del formulario digital.
+
+ETAPA 2 — CONTACTO INICIAL
+  a) Riesgo alto: el consejero contacta al estudiante por teléfono o email en 48 horas.
+  b) Riesgo medio: citación por email con plazo de respuesta de 5 días hábiles.
+  c) Si no hay respuesta: visita a la sala de clases o contacto con familiar registrado.
+
+ETAPA 3 — DIAGNÓSTICO
+  a) Entrevista de 30-45 minutos con el consejero.
+  b) Evaluación de dimensiones: académica, económica, personal/emocional, familiar.
+  c) Identificación de factores protectores y de riesgo específicos.
+  d) Aplicación de escala breve de bienestar estudiantil (5 ítems).
+
+ETAPA 4 — PLAN DE INTERVENCIÓN INDIVIDUALIZADO (PII)
+El PII debe incluir:
+  - Objetivos de mejora por dimensión afectada
+  - Acciones concretas y plazos
+  - Recursos disponibles asignados (tutorías, psicología, beca, convenio de pago)
+  - Frecuencia de seguimiento acordada (semanal, quincenal, mensual)
+  - Firma del estudiante y del consejero
+
+ETAPA 5 — SEGUIMIENTO Y CIERRE
+  a) Registro de todas las interacciones en el sistema (ConsultorEstudiantilIA).
+  b) Revisión del PII en cada sesión de seguimiento.
+  c) Escalamiento a psicología si se detectan señales de crisis emocional.
+  d) Cierre del caso cuando el estudiante supera los indicadores de riesgo por 2 semestres consecutivos.
+
+===========================================================
+4. ESCALAMIENTO A CRISIS
+===========================================================
+
+En los siguientes casos se debe escalar INMEDIATAMENTE al servicio de psicología y notificar al Director de Carrera:
+
+- Expresiones de abandono de estudios por motivos emocionales graves
+- Indicios de violencia doméstica o situación de calle
+- Verbalización de pensamientos de autolesión o suicidio
+- Situación de dependencia a sustancias
+
+Contacto de emergencia psicológica UCEN:
+- Teléfono: (+56 2) 2582 6000 interno 301
+- Email de urgencia: psicourgencias@ucen.cl
+- Horario: lunes a viernes 8:00-20:00 / sábados 9:00-14:00
+
+===========================================================
+5. REGISTRO Y CONFIDENCIALIDAD
+===========================================================
+
+Art. 1. Todos los registros de intervención son confidenciales y solo accesibles por el consejero asignado, el Director de Carrera y la Vicerrectoría Académica.
+
+Art. 2. Los datos no pueden ser compartidos con terceros sin consentimiento expreso del estudiante, salvo en casos de riesgo vital.
+
+Art. 3. El sistema IA puede analizar datos agregados y anonimizados para mejorar los modelos predictivos, sin acceso a datos personales identificables.
+
+Art. 4. El estudiante tiene derecho a conocer su score de riesgo y los factores que lo determinan cuando lo solicite.
+
+===========================================================
+6. ROLES Y RESPONSABILIDADES
+===========================================================
+
+CONSEJERO ACADÉMICO:
+- Monitorear semanalmente el tablero de riesgo.
+- Ejecutar el protocolo de contacto dentro de los plazos establecidos.
+- Registrar TODAS las interacciones en el sistema.
+- Coordinar con psicología, finanzas y CAA según las necesidades del estudiante.
+- Elaborar informe semestral de casos gestionados.
+
+DIRECTOR DE CARRERA:
+- Asegurar que cada consejero no supere 120 estudiantes asignados.
+- Revisar casos de riesgo alto semanalmente.
+- Autorizar excepciones al reglamento académico cuando el protocolo lo indique.
+- Reportar indicadores de deserción a la Vicerrectoría.
+
+VICERRECTORÍA ACADÉMICA:
+- Supervisar el cumplimiento del protocolo.
+- Proveer recursos para los programas de apoyo.
+- Revisar y actualizar anualmente este protocolo.

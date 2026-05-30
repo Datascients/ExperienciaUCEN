@@ -22,7 +22,7 @@ export default function ChatbotWidget({ estudianteId }: Props) {
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [mensajes])
+  }, [mensajes, cargando])
 
   const enviar = async () => {
     const texto = input.trim()
@@ -55,7 +55,7 @@ export default function ChatbotWidget({ estudianteId }: Props) {
     } catch {
       setMensajes((prev) => [
         ...prev,
-        { rol: 'asistente', contenido: 'Error al conectar con el servidor.' },
+        { rol: 'asistente', contenido: '⚠️ Error al conectar con el servidor. Intenta nuevamente.' },
       ])
     } finally {
       setCargando(false)
@@ -63,76 +63,120 @@ export default function ChatbotWidget({ estudianteId }: Props) {
   }
 
   return (
-    <div className="fixed bottom-6 right-6 z-50">
+    <div className="fixed bottom-5 right-5 z-50">
       {abierto && (
-        <div className="w-80 bg-white rounded-2xl shadow-2xl border border-slate-200 flex flex-col overflow-hidden mb-3" style={{ height: 420 }}>
-          <div className="bg-indigo-700 text-white px-4 py-3 flex items-center justify-between">
-            <span className="font-semibold text-sm">ConsultorEstudiantilIA</span>
-            <button onClick={() => setAbierto(false)} className="text-white/70 hover:text-white text-lg leading-none">×</button>
+        <div
+          className="w-[340px] bg-white rounded-2xl shadow-2xl border border-slate-200 flex flex-col overflow-hidden mb-3"
+          style={{ height: 460 }}
+        >
+          {/* Header */}
+          <div className="bg-gradient-to-r from-indigo-700 to-indigo-600 px-4 py-3 flex items-center justify-between flex-shrink-0">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-base">🤖</div>
+              <div>
+                <p className="text-white font-semibold text-sm leading-none">Asistente IA</p>
+                <p className="text-indigo-200 text-xs mt-0.5">ConsultorEstudiantilIA</p>
+              </div>
+            </div>
+            <button
+              onClick={() => setAbierto(false)}
+              className="text-white/60 hover:text-white text-xl leading-none transition-colors"
+            >
+              ×
+            </button>
           </div>
 
-          <div className="flex-1 overflow-y-auto p-3 space-y-3">
+          {/* Mensajes */}
+          <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50">
             {mensajes.length === 0 && (
-              <p className="text-xs text-slate-400 text-center mt-8">
-                Hola, ¿en qué puedo ayudarte hoy?
-              </p>
+              <div className="flex flex-col items-center justify-center h-full text-center">
+                <div className="w-12 h-12 rounded-2xl bg-indigo-100 flex items-center justify-center text-2xl mb-3">
+                  💬
+                </div>
+                <p className="text-sm font-medium text-slate-700">¿En qué puedo ayudarte?</p>
+                <p className="text-xs text-slate-400 mt-1">
+                  Pregunta sobre becas, reglamento o tu situación académica.
+                </p>
+              </div>
             )}
+
             {mensajes.map((m, i) => (
-              <div key={i} className={`flex ${m.rol === 'usuario' ? 'justify-end' : 'justify-start'}`}>
-                <div className={`max-w-[85%] rounded-xl px-3 py-2 text-sm ${
-                  m.rol === 'usuario'
-                    ? 'bg-indigo-600 text-white'
-                    : 'bg-slate-100 text-slate-800'
-                }`}>
-                  <p className="whitespace-pre-wrap">{m.contenido}</p>
+              <div key={i} className={`flex ${m.rol === 'usuario' ? 'justify-end' : 'justify-start'} gap-2`}>
+                {m.rol === 'asistente' && (
+                  <div className="w-6 h-6 rounded-full bg-indigo-100 flex items-center justify-center text-xs flex-shrink-0 mt-1">
+                    🤖
+                  </div>
+                )}
+                <div className={`max-w-[78%] ${m.rol === 'usuario' ? 'order-first' : ''}`}>
+                  <div className={`rounded-2xl px-3.5 py-2.5 text-sm ${
+                    m.rol === 'usuario'
+                      ? 'bg-indigo-600 text-white rounded-br-sm'
+                      : 'bg-white text-slate-800 shadow-sm border border-slate-100 rounded-bl-sm'
+                  }`}>
+                    <p className="whitespace-pre-wrap leading-relaxed">{m.contenido}</p>
+                  </div>
                   {m.escalar && (
-                    <p className="mt-1 text-xs font-medium text-red-600 bg-red-50 rounded px-2 py-1">
-                      Derivado a consejero humano
-                    </p>
+                    <div className="mt-1.5 text-xs font-medium text-red-600 bg-red-50 border border-red-100 rounded-xl px-3 py-1.5 flex items-center gap-1.5">
+                      🚨 Derivado a consejero humano
+                    </div>
                   )}
                   {m.fuentes && m.fuentes.length > 0 && (
-                    <p className="mt-1 text-xs text-slate-400">
-                      Fuente: {m.fuentes[0].documento}
+                    <p className="mt-1 text-xs text-slate-400 px-1">
+                      📎 {m.fuentes[0].documento}
                     </p>
                   )}
                 </div>
               </div>
             ))}
+
             {cargando && (
-              <div className="flex justify-start">
-                <div className="bg-slate-100 rounded-xl px-3 py-2 text-sm text-slate-400">
-                  Consultando...
+              <div className="flex justify-start gap-2">
+                <div className="w-6 h-6 rounded-full bg-indigo-100 flex items-center justify-center text-xs flex-shrink-0">
+                  🤖
+                </div>
+                <div className="bg-white border border-slate-100 rounded-2xl rounded-bl-sm px-4 py-3 shadow-sm">
+                  <div className="flex gap-1 items-center">
+                    <div className="w-1.5 h-1.5 bg-indigo-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                    <div className="w-1.5 h-1.5 bg-indigo-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                    <div className="w-1.5 h-1.5 bg-indigo-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                  </div>
                 </div>
               </div>
             )}
             <div ref={bottomRef} />
           </div>
 
-          <div className="border-t border-slate-100 p-2 flex gap-2">
+          {/* Input */}
+          <div className="border-t border-slate-200 p-3 flex gap-2 bg-white flex-shrink-0">
             <input
-              className="flex-1 text-sm border border-slate-200 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+              className="flex-1 text-sm border border-slate-200 rounded-xl px-3.5 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent bg-slate-50"
               placeholder="Escribe tu consulta..."
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && enviar()}
+              onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && enviar()}
             />
             <button
               onClick={enviar}
-              disabled={cargando}
-              className="bg-indigo-600 text-white text-sm px-3 rounded-lg hover:bg-indigo-700 disabled:opacity-50"
+              disabled={cargando || !input.trim()}
+              className="bg-indigo-600 text-white text-sm px-3.5 rounded-xl hover:bg-indigo-700 disabled:opacity-40 transition-colors font-medium"
             >
-              Enviar
+              →
             </button>
           </div>
         </div>
       )}
 
       <button
+        id="chatbot-toggle"
         onClick={() => setAbierto((v) => !v)}
-        className="w-14 h-14 bg-indigo-700 rounded-full shadow-lg flex items-center justify-center text-white text-2xl hover:bg-indigo-800 transition-colors"
-        aria-label="Abrir chatbot"
+        className={`w-14 h-14 rounded-full shadow-xl flex items-center justify-center text-white text-2xl transition-all hover:scale-105 active:scale-95 ${
+          abierto
+            ? 'bg-slate-700 rotate-180'
+            : 'bg-gradient-to-br from-indigo-600 to-indigo-700 shadow-indigo-300'
+        }`}
+        aria-label="Abrir asistente IA"
       >
-        💬
+        {abierto ? '✕' : '💬'}
       </button>
     </div>
   )

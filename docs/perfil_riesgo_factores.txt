@@ -1,0 +1,114 @@
+FACTORES DE RIESGO DE DESERCIÓN ESTUDIANTIL — MARCO CONCEPTUAL Y OPERACIONAL
+UCEN · Unidad de Análisis Institucional · 2024
+
+===========================================================
+1. MARCO TEÓRICO
+===========================================================
+
+La deserción estudiantil es un fenómeno multidimensional influenciado por factores académicos, socioeconómicos, institucionales y personales. El modelo predictivo de la UCEN integra investigaciones de Tinto (1975), Bean & Metzner (1985) y estudios regionales del SIES.
+
+===========================================================
+2. FACTORES ACADÉMICOS (peso: 40% del score de riesgo)
+===========================================================
+
+2.1 Rendimiento Académico
+- Promedio ponderado acumulado (PPA) < 4,5: riesgo moderado
+- PPA < 4,0: riesgo alto
+- Caída de 1 punto o más en PPA respecto al semestre anterior: señal de alerta
+- Reprobación de asignatura en primer semestre: predictor significativo
+
+2.2 Asistencia
+- Asistencia < 75%: riesgo moderado (correlación 0,67 con deserción)
+- Asistencia < 60%: riesgo alto
+- Patrón de ausencias los lunes o viernes: indicador de desvinculación
+
+2.3 Carga Académica
+- Inscripción de menos del 60% de la carga máxima: señal de desvinculación
+- Múltiples retiros de asignaturas: predictor de deserción en el semestre siguiente
+
+2.4 Historial de Reprobaciones
+- 1 asignatura reprobada: riesgo bajo
+- 2 asignaturas reprobadas en el mismo semestre: riesgo moderado
+- 3 o más asignaturas reprobadas: riesgo alto
+- Reprobación reiterada de la misma asignatura: riesgo alto
+
+===========================================================
+3. FACTORES SOCIOECONÓMICOS (peso: 30% del score de riesgo)
+===========================================================
+
+3.1 Situación Financiera
+- Deuda de arancel > 1 cuota: riesgo moderado
+- Deuda de arancel > 2 cuotas: riesgo alto
+- Pérdida de beca o beneficio: señal de alerta inmediata
+- Necesidad de trabajar más de 20 horas semanales: riesgo moderado
+
+3.2 Origen Socioeconómico
+- Estudiantes de primer ingreso (primera generación universitaria): requieren acompañamiento reforzado
+- Estudiantes con RSH percentil < 40%: prioridad en asignación de becas
+
+3.3 Procedencia Geográfica
+- Estudiantes de otras regiones (fuera de la Región Metropolitana): riesgo moderado por desvinculación familiar
+- Estudiantes de comunas rurales: riesgo adicional por adaptación urbana
+
+===========================================================
+4. FACTORES PERSONALES Y EMOCIONALES (peso: 20% del score)
+===========================================================
+
+4.1 Salud Mental
+- Indicadores de ansiedad severa o depresión: escalar a psicología
+- Duelo reciente (familiar, separación): señal de alerta
+- Historial de suspensión por motivos personales: riesgo moderado
+
+4.2 Integración Social
+- Sin participación en actividades extracurriculares: riesgo moderado (semestre 1 y 2)
+- Aislamiento reportado por docentes: señal de alerta
+- Conflictos con pares o docentes: requiere mediación
+
+4.3 Motivación y Vocación
+- Estudiante en carrera no elegida como primera opción: riesgo moderado
+- Expresiones de arrepentimiento o duda vocacional: requiere orientación
+
+===========================================================
+5. FACTORES INSTITUCIONALES (peso: 10% del score)
+===========================================================
+
+5.1 Experiencia de Clases
+- Percepción negativa del ambiente de clases (encuesta semestral): señal de alerta
+- Asignaturas con alta tasa histórica de reprobación: requieren seguimiento especial
+
+5.2 Relación con Consejería
+- Más de 45 días sin contacto con consejero: riesgo moderado
+- Rechazo reiterado a sesiones de consejería: escalar a Director de Carrera
+
+===========================================================
+6. MODELO DE SCORING — VARIABLES DEL ALGORITMO
+===========================================================
+
+El score de riesgo (0.0 a 1.0) se calcula con el siguiente modelo:
+
+Variables de entrada:
+- promedio: promedio ponderado del semestre (0.0 - 7.0)
+- porcentaje_asistencia: fracción de clases asistidas (0.0 - 1.0)
+- asignaturas_reprobadas: número de ramos reprobados (entero)
+- creditos_inscritos: créditos matriculados (entero)
+- semestre: semestre en curso (entero)
+- tiene_deuda: booleano (true/false)
+- es_primera_generacion: booleano (true/false)
+- dias_sin_contacto: días desde última interacción con consejero
+
+Clasificación de salida:
+- score < 0.35: nivel "bajo" — seguimiento preventivo
+- 0.35 ≤ score < 0.65: nivel "medio" — intervención en 5 días
+- score ≥ 0.65: nivel "alto" — intervención inmediata
+
+===========================================================
+7. VALIDACIÓN DEL MODELO
+===========================================================
+
+El modelo fue validado con datos históricos de 2019-2023 (n = 12.430 estudiantes):
+- Precisión global: 83%
+- Sensibilidad (detección de desertores reales): 79%
+- Especificidad: 86%
+- AUC-ROC: 0.88
+
+Los resultados indican que la intervención temprana basada en el modelo reduce la tasa de deserción efectiva en un 23% (comparativa con cohortes sin intervención sistemática).

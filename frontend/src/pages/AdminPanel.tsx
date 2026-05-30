@@ -28,7 +28,6 @@ export default function AdminPanel() {
   const [feedback, setFeedback] = useState<FeedbackForm>({ estudiante_id: '', observacion: '', consejero_id: '' })
   const [feedbackEnviado, setFeedbackEnviado] = useState(false)
   const [enviandoFeedback, setEnviandoFeedback] = useState(false)
-  const [seedMensaje, setSeedMensaje] = useState('')
 
   useEffect(() => {
     if (!usuario) { navigate('/'); return }
@@ -41,9 +40,7 @@ export default function AdminPanel() {
     try {
       const res = await fetch(`${apiUrl}/admin/reporteria`)
       if (res.ok) setKpis(await res.json())
-    } catch {
-      /* no-op */
-    } finally {
+    } catch { /* no-op */ } finally {
       setCargando(false)
     }
   }
@@ -66,118 +63,159 @@ export default function AdminPanel() {
         setFeedback({ estudiante_id: '', observacion: '', consejero_id: '' })
         setTimeout(() => setFeedbackEnviado(false), 3000)
       }
-    } catch {
-      /* no-op */
-    } finally {
+    } catch { /* no-op */ } finally {
       setEnviandoFeedback(false)
     }
   }
 
-  const tabs: { key: typeof tabActiva; label: string }[] = [
-    { key: 'resumen', label: 'Resumen del Sistema' },
-    { key: 'feedback', label: 'Registrar Observación' },
-    { key: 'seed', label: 'Datos de Prueba' },
+  const stats = [
+    { label: 'Total Estudiantes', value: kpis.total_estudiantes ?? '—', icon: '👥', color: 'bg-indigo-50 text-indigo-700', ring: 'ring-indigo-100' },
+    { label: 'Riesgo Alto', value: kpis.riesgo_alto ?? '—', icon: '🔴', color: 'bg-red-50 text-red-700', ring: 'ring-red-100' },
+    { label: 'Riesgo Medio', value: kpis.riesgo_medio ?? '—', icon: '🟡', color: 'bg-amber-50 text-amber-700', ring: 'ring-amber-100' },
+    { label: 'Riesgo Bajo', value: kpis.riesgo_bajo ?? '—', icon: '🟢', color: 'bg-emerald-50 text-emerald-700', ring: 'ring-emerald-100' },
+    {
+      label: 'Intervenciones Pendientes', value: kpis.intervenciones_pendientes ?? '—',
+      icon: '⏳', color: 'bg-violet-50 text-violet-700', ring: 'ring-violet-100'
+    },
+    {
+      label: 'Intervenciones Exitosas', value: kpis.intervenciones_exitosas ?? '—',
+      icon: '✅', color: 'bg-cyan-50 text-cyan-700', ring: 'ring-cyan-100'
+    },
+    {
+      label: 'Tasa de Retención', icon: '📈', ring: 'ring-teal-100',
+      value: kpis.tasa_retencion !== undefined ? `${(kpis.tasa_retencion * 100).toFixed(1)}%` : '—',
+      color: 'bg-teal-50 text-teal-700',
+    },
+  ]
+
+  const servicios = [
+    { label: 'Backend API', detalle: apiUrl, estado: 'Operativo', dot: 'bg-emerald-500' },
+    { label: 'Pinecone Index', detalle: 'satisfaccion-ucen', estado: 'Activo', dot: 'bg-emerald-500' },
+    { label: 'Supabase DB', detalle: 'tablas desercion_*', estado: 'Conectado', dot: 'bg-emerald-500' },
+  ]
+
+  const tabs = [
+    { key: 'resumen' as const, label: 'Resumen', icon: '📊' },
+    { key: 'feedback' as const, label: 'Observación', icon: '📝' },
+    { key: 'seed' as const, label: 'Datos de Prueba', icon: '🗄️' },
   ]
 
   return (
     <div className="min-h-screen bg-slate-50">
       <Navbar />
-      <div className="max-w-5xl mx-auto px-4 py-8">
 
-        <div className="flex items-center gap-3 mb-6">
-          <div className="w-9 h-9 rounded-full bg-indigo-600 flex items-center justify-center text-white text-sm font-bold">
-            A
-          </div>
-          <div>
-            <h1 className="text-2xl font-bold text-slate-800">Panel de Administración</h1>
-            <p className="text-sm text-slate-500">Bienvenido, {usuario?.nombre}</p>
+      {/* Header */}
+      <div className="bg-gradient-to-r from-slate-900 to-indigo-900 text-white">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-2xl bg-white/10 backdrop-blur flex items-center justify-center text-2xl">
+              ⚙️
+            </div>
+            <div>
+              <h1 className="text-2xl font-bold">Panel de Administración</h1>
+              <p className="text-slate-300 text-sm mt-0.5">Monitoreo y gestión del sistema · {usuario?.nombre}</p>
+            </div>
           </div>
         </div>
+      </div>
+
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6">
 
         {/* Tabs */}
-        <div className="flex gap-1 mb-6 bg-white border border-slate-200 rounded-xl p-1 w-fit">
-          {tabs.map(({ key, label }) => (
+        <div className="flex gap-1 mb-6 bg-white border border-slate-200 rounded-2xl p-1 w-fit shadow-sm">
+          {tabs.map(({ key, label, icon }) => (
             <button
               key={key}
               onClick={() => setTabActiva(key)}
-              className={`text-sm px-4 py-1.5 rounded-lg transition-colors ${
+              className={`flex items-center gap-1.5 text-sm px-4 py-2 rounded-xl font-medium transition-all ${
                 tabActiva === key
-                  ? 'bg-indigo-600 text-white font-medium'
+                  ? 'bg-indigo-600 text-white shadow-sm'
                   : 'text-slate-600 hover:bg-slate-50'
               }`}
             >
-              {label}
+              <span>{icon}</span> {label}
             </button>
           ))}
         </div>
 
-        {/* Tab: Resumen */}
+        {/* Tab Resumen */}
         {tabActiva === 'resumen' && (
           <div>
             {cargando ? (
-              <p className="text-slate-400 py-8">Cargando...</p>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6 animate-pulse">
+                {[...Array(4)].map((_, i) => (
+                  <div key={i} className="bg-white rounded-2xl h-24 border border-slate-100" />
+                ))}
+              </div>
             ) : (
               <>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
-                  {[
-                    { label: 'Total Estudiantes', value: kpis.total_estudiantes ?? '—', color: 'text-slate-800' },
-                    { label: 'Riesgo Alto', value: kpis.riesgo_alto ?? '—', color: 'text-red-600' },
-                    { label: 'Riesgo Medio', value: kpis.riesgo_medio ?? '—', color: 'text-yellow-600' },
-                    { label: 'Riesgo Bajo', value: kpis.riesgo_bajo ?? '—', color: 'text-green-600' },
-                  ].map(({ label, value, color }) => (
-                    <div key={label} className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
-                      <p className={`text-3xl font-bold ${color}`}>{value}</p>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4">
+                  {stats.slice(0, 4).map(({ label, value, icon, color, ring }) => (
+                    <div key={label} className={`bg-white rounded-2xl border border-slate-100 shadow-sm p-5 ring-1 ${ring}`}>
+                      <div className="flex items-center justify-between mb-3">
+                        <span className="text-xl">{icon}</span>
+                        <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${color}`}>
+                          {label.split(' ')[0]}
+                        </span>
+                      </div>
+                      <p className="text-3xl font-extrabold text-slate-900">{value}</p>
                       <p className="text-xs text-slate-500 mt-1">{label}</p>
                     </div>
                   ))}
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-                  <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
-                    <p className="text-2xl font-bold text-indigo-600">{kpis.intervenciones_pendientes ?? '—'}</p>
-                    <p className="text-xs text-slate-500 mt-1">Intervenciones pendientes</p>
-                  </div>
-                  <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
-                    <p className="text-2xl font-bold text-green-600">{kpis.intervenciones_exitosas ?? '—'}</p>
-                    <p className="text-xs text-slate-500 mt-1">Intervenciones exitosas</p>
-                  </div>
-                  <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
-                    <p className="text-2xl font-bold text-blue-600">
-                      {kpis.tasa_retencion !== undefined
-                        ? `${(kpis.tasa_retencion * 100).toFixed(1)}%`
-                        : '—'}
-                    </p>
-                    <p className="text-xs text-slate-500 mt-1">Tasa de retención</p>
-                  </div>
+                  {stats.slice(4).map(({ label, value, icon, color, ring }) => (
+                    <div key={label} className={`bg-white rounded-2xl border border-slate-100 shadow-sm p-5 ring-1 ${ring}`}>
+                      <div className="flex items-center justify-between mb-3">
+                        <span className="text-xl">{icon}</span>
+                        <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${color}`}>KPI</span>
+                      </div>
+                      <p className="text-3xl font-extrabold text-slate-900">{value}</p>
+                      <p className="text-xs text-slate-500 mt-1">{label}</p>
+                    </div>
+                  ))}
                 </div>
 
-                {/* Sistema info */}
-                <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
-                  <h2 className="text-sm font-semibold text-slate-700 mb-3">Estado del Sistema</h2>
-                  <div className="space-y-2 text-sm">
-                    {[
-                      { label: 'Backend API', url: apiUrl, estado: 'operativo' },
-                      { label: 'Pinecone Index', url: 'desercion-docs', estado: 'activo' },
-                      { label: 'Supabase DB', url: 'tablas desercion_*', estado: 'conectado' },
-                    ].map(({ label, url, estado }) => (
-                      <div key={label} className="flex items-center justify-between py-1.5 border-b border-slate-50 last:border-0">
-                        <div>
-                          <span className="font-medium text-slate-700">{label}</span>
-                          <span className="ml-2 text-xs text-slate-400">{url}</span>
+                {/* Estado servicios */}
+                <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 mb-4">
+                  <h2 className="text-sm font-bold text-slate-800 mb-4 flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" /> Estado del Sistema
+                  </h2>
+                  <div className="space-y-3">
+                    {servicios.map(({ label, detalle, estado, dot }) => (
+                      <div key={label} className="flex items-center justify-between py-2 border-b border-slate-50 last:border-0">
+                        <div className="flex items-center gap-3">
+                          <span className={`w-2 h-2 rounded-full ${dot}`} />
+                          <div>
+                            <p className="text-sm font-medium text-slate-800">{label}</p>
+                            <p className="text-xs text-slate-400 font-mono truncate max-w-xs">{detalle}</p>
+                          </div>
                         </div>
-                        <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">{estado}</span>
+                        <span className="text-xs bg-emerald-100 text-emerald-700 font-medium px-2.5 py-1 rounded-full">
+                          {estado}
+                        </span>
                       </div>
                     ))}
                   </div>
                 </div>
 
-                {/* Credenciales de prueba */}
-                <div className="mt-4 bg-amber-50 border border-amber-200 rounded-xl p-4">
-                  <p className="text-sm font-semibold text-amber-800 mb-2">Credenciales de prueba</p>
-                  <div className="grid grid-cols-3 gap-3 text-xs text-amber-700">
-                    <div><p className="font-medium">Admin</p><p>Admin / 1234</p><p className="text-amber-500">/admin</p></div>
-                    <div><p className="font-medium">Consejero</p><p>consejero@uai.cl / demo2025</p><p className="text-amber-500">/dashboard</p></div>
-                    <div><p className="font-medium">Estudiante</p><p>cualquier email / cualquier clave</p><p className="text-amber-500">/estudiante</p></div>
+                {/* Credenciales demo */}
+                <div className="bg-amber-50 border border-amber-200 rounded-2xl p-5">
+                  <p className="text-sm font-bold text-amber-900 mb-3 flex items-center gap-2">🔑 Credenciales de demo</p>
+                  <div className="grid grid-cols-3 gap-4 text-xs">
+                    {[
+                      { rol: 'Admin', user: 'Admin', pass: '1234', path: '/admin', color: 'text-violet-700' },
+                      { rol: 'Consejero', user: 'consejero@ucen.cl', pass: 'demo2025', path: '/dashboard', color: 'text-cyan-700' },
+                      { rol: 'Estudiante', user: 'cualquier email', pass: 'cualquier clave', path: '/estudiante', color: 'text-emerald-700' },
+                    ].map(({ rol, user, pass, path, color }) => (
+                      <div key={rol} className="bg-white rounded-xl p-3 border border-amber-100">
+                        <p className={`font-bold mb-1 ${color}`}>{rol}</p>
+                        <p className="text-amber-700">{user}</p>
+                        <p className="text-amber-700">{pass}</p>
+                        <p className="text-amber-400 font-mono mt-1">{path}</p>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </>
@@ -185,89 +223,86 @@ export default function AdminPanel() {
           </div>
         )}
 
-        {/* Tab: Feedback */}
+        {/* Tab Feedback */}
         {tabActiva === 'feedback' && (
           <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 max-w-lg">
-            <h2 className="text-base font-semibold text-slate-700 mb-4">Registrar Observación de Estudiante</h2>
+            <h2 className="text-base font-bold text-slate-800 mb-1">Registrar Observación</h2>
+            <p className="text-sm text-slate-500 mb-5">Documenta eventos o situaciones relevantes de un estudiante.</p>
+
             {feedbackEnviado && (
-              <div className="mb-4 bg-green-50 border border-green-200 text-green-700 text-sm rounded-lg p-3">
-                Observación registrada correctamente.
+              <div className="mb-4 bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm rounded-xl p-3 flex items-center gap-2">
+                ✅ Observación registrada correctamente.
               </div>
             )}
-            <div className="space-y-3">
+
+            <div className="space-y-4">
+              {[
+                { key: 'estudiante_id' as const, label: 'ID del Estudiante', placeholder: 'UUID del estudiante', required: true },
+                { key: 'consejero_id' as const, label: 'ID del Consejero', placeholder: usuario?.id ?? 'UUID del consejero (opcional)', required: false },
+              ].map(({ key, label, placeholder, required }) => (
+                <div key={key}>
+                  <label className="text-sm font-medium text-slate-700 block mb-1.5">
+                    {label} {required && <span className="text-red-400">*</span>}
+                  </label>
+                  <input
+                    type="text"
+                    value={feedback[key]}
+                    onChange={(e) => setFeedback((p) => ({ ...p, [key]: e.target.value }))}
+                    placeholder={placeholder}
+                    className="w-full border border-slate-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  />
+                </div>
+              ))}
               <div>
-                <label className="text-sm font-medium text-slate-600 block mb-1">
-                  ID del Estudiante <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  value={feedback.estudiante_id}
-                  onChange={(e) => setFeedback((p) => ({ ...p, estudiante_id: e.target.value }))}
-                  placeholder="UUID del estudiante"
-                  className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm"
-                />
-              </div>
-              <div>
-                <label className="text-sm font-medium text-slate-600 block mb-1">
-                  Observación <span className="text-red-500">*</span>
+                <label className="text-sm font-medium text-slate-700 block mb-1.5">
+                  Observación <span className="text-red-400">*</span>
                 </label>
                 <textarea
                   value={feedback.observacion}
                   onChange={(e) => setFeedback((p) => ({ ...p, observacion: e.target.value }))}
                   rows={4}
                   placeholder="Describe la situación o novedad del estudiante..."
-                  className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm resize-none"
-                />
-              </div>
-              <div>
-                <label className="text-sm font-medium text-slate-600 block mb-1">ID del Consejero (opcional)</label>
-                <input
-                  type="text"
-                  value={feedback.consejero_id}
-                  onChange={(e) => setFeedback((p) => ({ ...p, consejero_id: e.target.value }))}
-                  placeholder={usuario?.id ?? 'UUID del consejero'}
-                  className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm"
+                  className="w-full border border-slate-300 rounded-xl px-4 py-2.5 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 />
               </div>
             </div>
             <button
               onClick={enviarFeedback}
               disabled={enviandoFeedback || !feedback.estudiante_id || !feedback.observacion}
-              className="mt-4 w-full bg-indigo-600 text-white py-2 rounded-lg text-sm font-medium hover:bg-indigo-700 disabled:opacity-50"
+              className="mt-4 w-full bg-indigo-600 text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-indigo-700 disabled:opacity-50 transition-colors"
             >
               {enviandoFeedback ? 'Enviando...' : 'Registrar observación'}
             </button>
           </div>
         )}
 
-        {/* Tab: Seed */}
+        {/* Tab Seed */}
         {tabActiva === 'seed' && (
           <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 max-w-lg">
-            <h2 className="text-base font-semibold text-slate-700 mb-2">Datos de Prueba (Seed)</h2>
-            <p className="text-sm text-slate-500 mb-4">
-              Carga 500 estudiantes ficticios, 10 consejeros, intervenciones y scores ML de prueba en Supabase.
+            <h2 className="text-base font-bold text-slate-800 mb-1">Datos de Prueba (Seed)</h2>
+            <p className="text-sm text-slate-500 mb-5">
+              Genera datos ficticios de estudiantes, intervenciones y scores ML en Supabase.
             </p>
 
-            {seedMensaje && (
-              <div className="mb-4 bg-blue-50 border border-blue-200 text-blue-700 text-sm rounded-lg p-3 whitespace-pre-wrap font-mono">
-                {seedMensaje}
-              </div>
-            )}
-
-            <div className="bg-slate-50 rounded-lg p-4 mb-4 text-xs font-mono text-slate-600">
-              <p className="font-semibold text-slate-700 mb-2">Ejecutar desde terminal:</p>
-              <p>python -m src.db.seed</p>
+            <div className="bg-slate-900 rounded-xl p-4 mb-5 font-mono text-sm">
+              <p className="text-slate-400 text-xs mb-1"># Ejecutar desde la raíz del proyecto</p>
+              <p className="text-emerald-400">python -m src.db.seed</p>
             </div>
 
-            <div className="text-sm text-slate-500 space-y-1">
-              <p>El seed crea:</p>
-              <ul className="list-disc list-inside space-y-0.5 text-xs">
-                <li>500 estudiantes (30% alto, 40% medio, 30% bajo riesgo)</li>
-                <li>5 carreras: Ingeniería Civil, Pedagogía, Enfermería, Administración, Derecho</li>
-                <li>10 consejeros + 20 docentes</li>
-                <li>3 semestres de historial por estudiante</li>
-                <li>Intervenciones con resultados variados</li>
-              </ul>
+            <div className="space-y-2 text-sm text-slate-600">
+              <p className="font-semibold text-slate-700 mb-2">El seed crea:</p>
+              {[
+                '500 estudiantes (30% alto · 40% medio · 30% bajo riesgo)',
+                '5 carreras: Ing. Civil, Pedagogía, Enfermería, Adm., Derecho',
+                '10 consejeros + 20 docentes',
+                '3 semestres de historial por estudiante',
+                'Intervenciones con resultados variados',
+              ].map((item) => (
+                <div key={item} className="flex items-start gap-2">
+                  <span className="text-indigo-400 mt-0.5">▸</span>
+                  <span className="text-xs text-slate-600">{item}</span>
+                </div>
+              ))}
             </div>
           </div>
         )}
