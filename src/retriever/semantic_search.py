@@ -7,6 +7,7 @@ load_dotenv()
 
 _openai: AsyncOpenAI | None = None
 _pinecone_index = None
+EMBEDDING_DIMENSIONS = 1024
 
 
 def _get_openai() -> AsyncOpenAI:
@@ -35,6 +36,7 @@ class SemanticSearchDesercion:
         response = await client.embeddings.create(
             model="text-embedding-3-small",
             input=text,
+            dimensions=EMBEDDING_DIMENSIONS,
         )
         return response.data[0].embedding
 

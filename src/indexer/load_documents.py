@@ -1,7 +1,8 @@
 import os
 import asyncio
 from pathlib import Path
-from datetime import datetime
+import sys
+from datetime import datetime, timezone
 
 from openai import AsyncOpenAI
 from pinecone import Pinecone, ServerlessSpec
@@ -14,6 +15,7 @@ DOCS_FOLDER = "docs/"
 CHUNK_SIZE = 800
 OVERLAP = 100
 EMBEDDING_MODEL = "text-embedding-3-small"
+EMBEDDING_DIMENSIONS = 1024
 
 NAMESPACE_MAP = {
     "protocolo_intervencion_desercion": "protocolo-intervencion",
@@ -58,7 +60,11 @@ def _chunk_text(text: str) -> list[str]:
 
 
 async def _embed_batch(client: AsyncOpenAI, texts: list[str]) -> list[list[float]]:
-    response = await client.embeddings.create(model=EMBEDDING_MODEL, input=texts)
+    response = await client.embeddings.create(
+        model=EMBEDDING_MODEL,
+        input=texts,
+        dimensions=EMBEDDING_DIMENSIONS,
+    )
     return [item.embedding for item in response.data]
 
 
@@ -70,7 +76,7 @@ async def index_documents():
     if PINECONE_INDEX not in existing:
         pc.create_index(
             name=PINECONE_INDEX,
-            dimension=1536,
+            dimension=EMBEDDING_DIMENSIONS,
             metric="cosine",
             spec=ServerlessSpec(cloud="aws", region="us-east-1"),
         )
@@ -83,18 +89,18 @@ async def index_documents():
         return
 
     totals: dict[str, int] = {}
-    fecha = datetime.utcnow().isoformat()
+    fecha = datetime.now(timezone.utc).isoformat()
 
     for file in files:
         print(f"Procesando: {file.name}")
         namespace = _detect_namespace(file.name)
         text = _read_file(file)
         if not text:
-            print(f"  → Vacío o no se pudo leer.")
+            print(f"  -> Vacío o no se pudo leer.")
             continue
 
         chunks = _chunk_text(text)
-        print(f"  → {len(chunks)} chunks en namespace '{namespace}'")
+        print(f"  -> {len(chunks)} chunks en namespace '{namespace}'")
 
         batch_size = 100
         for i in range(0, len(chunks), batch_size):
