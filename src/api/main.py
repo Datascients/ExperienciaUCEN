@@ -13,12 +13,18 @@ from src.db import supabase_client as db
 load_dotenv()
 
 _agente: AgenteConsultorEstudiantilIA | None = None
+_init_error: str | None = None
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    global _agente
-    _agente = AgenteConsultorEstudiantilIA()
+    global _agente, _init_error
+    try:
+        _agente = AgenteConsultorEstudiantilIA()
+    except Exception as exc:
+        import logging
+        _init_error = str(exc)
+        logging.error("Agent init failed — check env vars: %s", exc)
     yield
 
 
@@ -78,11 +84,19 @@ class FeedbackRequest(BaseModel):
 
 @app.get("/")
 async def health_check():
-    return {"status": "ok", "servicio": "ConsultorEstudiantilIA", "version": "1.0.0"}
+    return {
+        "status": "ok" if _agente else "degraded",
+        "servicio": "ConsultorEstudiantilIA",
+        "version": "1.0.0",
+        "agent_ready": _agente is not None,
+        "init_error": _init_error,
+    }
 
 
 @app.post("/query")
 async def query_agente(req: QueryRequest):
+    if _agente is None:
+        raise HTTPException(status_code=503, detail=f"Agente no inicializado: {_init_error}")
     inicio = time.monotonic()
     try:
         contexto = {
@@ -113,6 +127,8 @@ async def query_agente(req: QueryRequest):
 
 @app.post("/scoring")
 async def scoring_estudiante(req: ScoringRequest):
+    if _agente is None:
+        raise HTTPException(status_code=503, detail=f"Agente no inicializado: {_init_error}")
     from src.agents.workers.worker_scoring import worker_scoring
     resultado = await worker_scoring(req.estudiante_id, req.features)
     if not resultado.get("ok"):
