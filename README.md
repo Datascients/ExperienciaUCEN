@@ -420,29 +420,43 @@ GET https://experienciaucen-production.up.railway.app/
 }
 ```
 
-### Grilla de métricas (6 pruebas en producción)
+### Grilla de 6 pruebas reales en producción
+
+| # | Pregunta | Rol | Worker activado | Fuentes Pinecone | Score top | Latencia (ms) | Largo resp. (chars) | Fiscalizador | Issues |
+|---|---|---|---|---|---|---|---|---|---|
+| 1 | ¿Qué información tienes sobre apoyo psicológico? | estudiante | worker_documentos | 5 | 0.426 | **3.170** | 895 | ❌ | incoherente |
+| 2 | ¿Qué becas están disponibles con deuda de arancel? | estudiante | worker_documentos | 5 | 0.662 | **2.831** | 835 | ✅ | — |
+| 3 | ¿Qué pasa si reprobo más del 50% de los créditos? | estudiante | worker_documentos | 5 | 0.565 | **2.481** | 755 | ❌ | incoherente |
+| 4 | ¿Cuál es el protocolo si un alumno falta el 60%? | consejero | worker_documentos | 5 | 0.540 | **3.270** | 1.265 | ❌ | incoherente |
+| 5 | ¿Cuáles son los factores de riesgo más importantes? | consejero | worker_historial_sql | 1 ⚠️ | — | **4.561** | 1.743 | ❌ | sin_fuentes |
+| 6 | ¿Cuál fue la tasa de deserción histórica por carrera? | admin | worker_historial_sql | 1 ⚠️ | — | **3.177** | 703 | ❌ | sin_fuentes |
+
+> ⚠️ Pruebas 5 y 6: el `worker_historial_sql` requiere `SUPABASE_SERVICE_ROLE_KEY` en Railway para retornar datos reales. Sin ella devuelve 1 fuente de fallback institucional. Con la variable configurada, retornará datos reales de los 500 estudiantes del seed.
+
+### Resumen de métricas agregadas
 
 | Métrica | Valor |
 |---|---|
-| Latencia promedio — worker semántico (pruebas 1, 2, 4) | **4.379 ms** |
-| Latencia promedio — worker SQL (pruebas 3, 5, 6) | **3.241 ms** |
-| Latencia promedio total (6 pruebas) | **3.810 ms** |
-| Fuentes retornadas por consulta | 1–5 fragmentos |
-| Precisión@5 (fuentes relevantes) | 100% (6/6) |
-| Fiscalizador OK | 0% — issues: `incoherente` por umbral estricto de overlap (ver mejoras) |
-| Escalamiento a consejero humano | Activado en consultas de crisis |
-| Respuesta salud API | `{"status":"ok","agent_ready":true}` |
+| Latencia promedio — `worker_documentos` (pruebas 1–4) | **2.938 ms** |
+| Latencia promedio — `worker_historial_sql` (pruebas 5–6) | **3.869 ms** |
+| **Latencia promedio total (6 pruebas)** | **3.248 ms** |
+| Fuentes Pinecone por consulta semántica | **5 / 5** (k=5 configurado) |
+| Score de similitud coseno promedio (pruebas 1–4) | **0.548** |
+| Fiscalizador OK | **1/6 (16.7%)** — umbral word-overlap 0.70 muy estricto (ver mejoras) |
+| Escalamiento a consejero humano | activado en crisis emocional |
+| Respuesta salud API | `{"status":"ok","agent_ready":true}` ✅ |
 
 ### Tokens estimados por consulta
 
 | Componente | Tokens |
 |---|---|
-| System prompt + contexto | ~400 tokens |
-| Query del usuario | ~25 tokens |
-| Fuentes recuperadas (k=5) | ~350 tokens |
-| **Total input** | **~775 tokens** |
-| **Output (respuesta)** | **~250 tokens** |
-| **Total por consulta** | **~1.025 tokens** |
+| System prompt orquestador | ~150 tokens |
+| System prompt síntesis (contexto + fuentes k=5) | ~400 tokens |
+| Query del usuario | ~20 tokens |
+| **Total input** | **~570 tokens** |
+| Clasificación GPT-4o output | ~20 tokens |
+| **Respuesta output** | **~220 tokens** |
+| **Total por consulta** | **~810 tokens** |
 
 ---
 
@@ -450,14 +464,14 @@ GET https://experienciaucen-production.up.railway.app/
 
 | Componente | Cálculo | Costo USD |
 |---|---|---|
-| GPT-4o Input (775 tokens × 1.000 · $2.50/1M) | 775K tokens | $1.94 |
-| GPT-4o Output (250 tokens × 1.000 · $10/1M) | 250K tokens | $2.50 |
-| Clasificador GPT-4o (50 tokens I/O × 1.000) | 100K tokens | $0.38 |
+| GPT-4o Input (570 tokens × 1.000 · $2.50/1M) | 570K tokens | $1.43 |
+| GPT-4o Output (220 tokens × 1.000 · $10/1M) | 220K tokens | $2.20 |
+| Clasificador GPT-4o (70 tokens I/O × 1.000) | 70K tokens | $0.23 |
 | OpenAI Embeddings (text-embedding-3-small) | 50K tokens | $0.001 |
-| Pinecone queries (serverless) | 1.000 queries | $1.00 |
+| Pinecone queries serverless (5 ns × 1.000) | 5.000 queries | $1.00 |
 | Railway (plan Starter prorrateado) | — | $0.50 |
 | Netlify (free tier) | — | $0.00 |
-| **Total estimado** | | **~$6.35 USD** |
+| **Total estimado** | | **~$5.36 USD** |
 
 ---
 
